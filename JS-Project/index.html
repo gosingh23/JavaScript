@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=devicewidth, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Javascript and the DOM</title>
+	<style type="text/css">
+		body {
+			padding: 15px;
+			background-color: green;
+			font-family: sans-serif;
+		}
+
+		#title {
+			padding: 10px;
+			font-size: 36px;
+			border: 2px solid #FFF;
+			width: 250px;
+		}
+
+		#header {
+			font-size: 24px;			
+		}
+
+		ul {
+			width:250px;
+			padding-left: 0;
+			list-style: none;
+		}
+
+		li {
+			color: #333;
+			background-color: rgba(255, 255, 255, .5);
+			padding: 15px;
+			margin-bottom: 15px;
+			border-right: 5px;
+		}
+	</style>
+</head>
+<body>
+	<h1>DOM - Document Object Model</h1>
+	<button id="change-background"> click here to change background</button>
+	<button id="change-background1"> double click here for blue</button>
+	<button id="change-background2"> click here for yellow</button>
+	<button id="change-background3"> orange</button>
+	<a id="navigation" href="index.html">Home</a>
+	<h2 id="pageheader">Welcome</h2>
+
+	<div>
+		<h1 id="title">Todo Tracker</h1>
+		<form>
+			<input type="text" id="user-todo" placeholder="New Todo">
+		</form>
+		<h2 id="todo-header">Todos</h2>
+		<ul>
+		</ul>
+		<button id="clear">Clear All</button>
+	</div>
+
+	<script>
+		var form = document.querySelector('form');
+		var todoList = document.querySelector('ul');
+		var button = document.getElementById('clear');
+		var input = document.getElementById('user-todo');
+		//var todosArray = [];
+		var todosArray = localStorage.getItem('todos') ? JSON.parse(localStorage.getItem('todos')) : [];
+
+		localStorage.setItem('todos', JSON.stringify(todosArray));
+		var storage = JSON.parse(localStorage.getItem('todos'));
+		console.log(storage);
+
+		form.addEventListener('submit', function(e){
+			e.preventDefault();
+			// push input value in todos array
+			todosArray.push(input.value);
+			localStorage.setItem('todos', JSON.stringify(todosArray));
+			todoMaker(input.value);
+			input.value = '';
+		});
+
+		var todoMaker = function(text){
+			var todo = document.createElement('li');
+			todo.textContent = text;
+			todoList.appendChild(todo);
+		}
+
+		// load todos from local storage
+		for(var i = 0; i < storage.length; i++) {
+			todoMaker(storage[i]);
+		}
+
+		button.addEventListener('click', function(){
+			localStorage.clear();
+			while(todoList.firstChild){
+				todoList.removeChild(todoList.firstChild);
+			}
+		});
+
+	</script>
+
+	<script src="main.js"></script>
+</body>
+</html>
